@@ -1,0 +1,9 @@
+Options +FollowSymLinks
+
+IndexIgnore */*
+
+RewriteEngine On
+ 
+RewriteCond %{REQUEST_URI} !^/(web)
+
+RewriteRule (.*) /web/$1
