@@ -1,9 +1,9 @@
 ﻿let slidr_wrapp = document.getElementById('slidr');
 
-let currentSlide = randomInteger(0, 7);
+let currentSlide = randomInteger(0, 5);
 slidr_wrapp.classList.add('slide' + currentSlide);
 
-let slideInterval = setInterval(nextSlide, 4000);
+let slideInterval = setInterval(nextSlide, 10000);
 
 function nextSlide(){
     goToSlide(currentSlide+1);
@@ -13,7 +13,7 @@ function previousSlide(){
 }
 function goToSlide(n){
 	
-	currentSlide = (n+8)%8;
+	currentSlide = (n+6)%6;
     slidr_wrapp.className = 'slidr slide' + currentSlide;
 	
 }
@@ -33,7 +33,7 @@ function playSlideshow()
 {
     pauseButton.innerHTML = '&#10074;&#10074;'; // pause character
     playing = true;
-    slideInterval = setInterval( nextSlide, 4000 );
+    slideInterval = setInterval( nextSlide, 10000 );
 }
 
 pauseButton.onclick = function(){

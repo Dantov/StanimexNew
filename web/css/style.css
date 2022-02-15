@@ -276,7 +276,6 @@ a:focus {
     background-color: transparent;
 }
 .slidr {
-
 	position: relative;
 	box-shadow: inset 0 0 100px 2px rgba(0,0,0,1);
 	transition: all ease-in 1s;
@@ -289,39 +288,29 @@ a:focus {
     background-position: center center;
 }
 .slide1 {
-	background: #49708f url('../img/sliderImages/slide_02.jpg') 0 0 no-repeat;
+	background: #49708f url('../img/sliderImages/slide_03.jpg') 0 0 no-repeat;
 	background-size: 100%;
     background-position: center center;
 }
 .slide2 {
-	background: #49708f url('../img/sliderImages/slide_03.jpg') 0 0 no-repeat;
+	background: #49708f url('../img/sliderImages/slide_04.jpg') 0 0 no-repeat;
 	background-size: 100%;
-    background-position: bottom center;
+    background-position: top center;
 }
 .slide3 {
-	background: #49708f url('../img/sliderImages/slide_04.jpg') 0 0 no-repeat;
+	background: #49708f url('../img/sliderImages/slide_05.jpg') 0 0 no-repeat;
 	background-size: 100%;
     background-position: center center;
 }
 .slide4 {
-	background: #49708f url('../img/sliderImages/slide_05.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: top center;
-}
-.slide5 {
 	background: #49708f url('../img/sliderImages/slide_06.jpg') 0 0 no-repeat;
 	background-size: 100%;
     background-position: center center;
 }
-.slide6 {
+.slide5 {
 	background: #49708f url('../img/sliderImages/slide_07.jpg') 0 0 no-repeat;
 	background-size: 100%;
-    background-position: center center;
-}
-.slide7 {
-	background: #49708f url('../img/sliderImages/slide_08.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: center center;
+    background-position: bottom center;
 }
 .slidr img {
 	position: relative;
@@ -836,4 +825,12 @@ a:focus {
     left: -10%;
     width: 279px;
     height: 98px;
+}
+.machineTopBg {
+    position: absolute;
+    background: url('../img/bannerOuterBg1.jpg') 0 0 repeat-x;
+    width: 100%;
+    top: -30px;
+    height: 92px;
+    z-index: 0;
 }

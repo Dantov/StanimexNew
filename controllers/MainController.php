@@ -86,7 +86,6 @@ class MainController extends Controller
      *
      * @return string
      */
-
     public function actionPriceList()
     {
         $session = Yii::$app->session;
@@ -108,6 +107,8 @@ class MainController extends Controller
 
     public function actionMachine( $id = null )
     {
+        $this->view->params['isPriceList'] = true;
+
         if ( (int)$id < 0 || (int)$id > PHP_INT_MAX )
             $this->response->redirect('/');
 
@@ -131,19 +132,8 @@ class MainController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->render('login');
     }
 
 

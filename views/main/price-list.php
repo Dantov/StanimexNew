@@ -3,6 +3,8 @@ use yii\helpers\Url;
 
 /* @var $stock array */
 ?>
+<div class="machineTopBg"></div>
+<div class="clearfix"></div>
 <div class="service">
     <div class="container">
 

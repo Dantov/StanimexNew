@@ -19,12 +19,21 @@ class Home {
 
 	public function getStock()
     {
-        return Stock::find()
+        $stock = Stock::find()
             ->with(['images'])
             ->where(['=','status','hot'])
             ->orWhere(['=','status','sold'])
             ->asArray()
             ->all();
+
+        foreach ( $stock as &$machine )
+        {
+            foreach ( $machine['images'] as &$image )
+                if ( !file_exists( _rootDIR_ . "/web/Stockimages/" . $image['img_name'] ) )
+                    $image['img_name'] = 'no-img.png';
+        }
+
+        return $stock;
 	}
 	
 	public function getAboutUs()

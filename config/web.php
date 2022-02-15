@@ -54,16 +54,14 @@ $config = [
                 '/'=> '/main/home',
                 'home'=> '/main/home',
                 'price-list'=> '/main/price-list',
+
+
                 'machine/<id:\d+>'=> '/main/machine',
 
-
-                'about'=> '/main/#about',
-                'hotsale'=> '/main/home/#hotsale',
-                'webuy'=> '#webuy',
-                'contact'=> '/main/#contact',
-
                 'stan-admin'=> '/main/login',
-                'stan-login'=> '/admin/stan-admin/index',
+                'stan-admin/login'=> '/admin/stan-admin/login',
+                'stan-admin/main'=> '/admin/stan-admin/index',
+
                 //'<action:(about|contact|login|logout)>'=>'site/<action>',
                 //'<action:\w+>'=>'site/<action>', // \w+ - любой символ от a-z и цифры 0-9
             ],

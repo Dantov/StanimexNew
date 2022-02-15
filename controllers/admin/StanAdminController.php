@@ -2,12 +2,12 @@
 
 namespace app\controllers\admin;
 
+use app\models\StanLoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 
 class StanAdminController extends Controller
 {
@@ -56,6 +56,35 @@ class StanAdminController extends Controller
         ];
     }
 
+    /**
+     *
+     */
+    public function actionLogin()
+    {
+        $request = yii::$app->request;
+        $response = yii::$app->response;
+
+        if ( !$request->isPost )
+            $this->response->redirect('/');
+
+        $loaded = $request->post();
+
+        $loginForm = new StanLoginForm($loaded['login'],$loaded['password']);
+
+        if ( !$loginForm->validateLogin() )
+        {
+            yii::$app->session->setFlash('loginError',$loginForm->getError('login'));
+            return $response->redirect('/stan-admin');
+        }
+
+        if ( !$loginForm->validatePassword() )
+        {
+            yii::$app->session->setFlash('passwordError','Пароль не верен!'); //$loginForm->getError('password')
+            return $response->redirect('/stan-admin');
+        }
+
+        return $response->redirect('/stan-admin/main');
+    }
 
     /**
      * Displays homepage.

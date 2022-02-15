@@ -23,18 +23,13 @@ $this->registerJsFile('@web/js/mainSlider.js?v=' . time() );
     </div>
 </div><!--slider-->
 
-<div class="col-md-12 call-to-action p0">
-    <ul class="nav nav-justified sect-headr">
-        <li><a href="<?= Url::to(['/price-list']) ?>"><i><img src="/web/img/stank_for_price.png" width="45px"></i> Полный Прайс-Лист</a></li>
-    </ul>
-    <a name="about"></a>
-</div>
+<div class="col-md-12 call-to-action p0"></div>
 
 <div class="clearfix"></div>
 
 <div class="about">
+    <a name="about"></a>
     <div class="container">
-
         <div class="col-md-12 sect-headr">
             <h2>О <span>Нас</span></h2>
             <h4><?= $aboutUs[0]['text_ru'] ?></h4>
@@ -93,8 +88,18 @@ $this->registerJsFile('@web/js/mainSlider.js?v=' . time() );
                             <!-- Wrapper for slides -->
                             <div class="carousel-inner" role="listbox">
                                 <?php foreach ( $machine['images'] as $k => $image ): ?>
-                                <div class="item <?= $k==0 ? "active" : "" ?>">
-                                    <img src="/web/Stockimages/<?=$image['img_name']?>" alt="<?=$machine['name_ru']?>">
+                                <div class="item <?= $k==0 ? "active" : "" ?>" style="max-height: 100%!important;">
+                                    <div class="ratio">
+                                        <div class="ratio-inner ratio-4-3">
+                                            <div class="ratio-content">
+                                                <div class="image-zoom responsive">
+                                                    <center>
+                                                        <img src="/web/Stockimages/<?=$image['img_name']?>" alt="<?=$machine['name_ru']?>" style="max-width: 100%;!important;">
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <?php endforeach; ?>
                                 <div class="carousel-caption">

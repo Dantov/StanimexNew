@@ -34,10 +34,33 @@ ImageViewer.prototype.addListeners = function()
     $.each(this.images, function(id, image) {
 
         image.addEventListener('click', function () {
-            modalImg.src = image.src;
+            //modalImg.src = image.src;
+
+            let dataNum = this.getAttribute('data-num');
             $('#ShowImageModal').modal('show');
+
+            let c = $('.carousel');
+                c.carousel(+dataNum);
+                c.carousel('pause');
         })
     });
 };
+ImageViewer.prototype.onLoad = function()
+{
+    /*
+    //let allImages = document.querySelectorAll('.machinePicture');
+    $.each(this.images, function(id, image) {
 
+        image.onload = function (e) {
+            this.classList.remove('hidden');
+            this.previousElementSibling.classList.add('hidden');
+            console.log(this);
+        };
+        console.log("loaded123");
+    });
+    */
+};
 let imageViewer = new ImageViewer( document.querySelector('#topName').innerHTML );
+
+
+//imageViewer.onLoad();

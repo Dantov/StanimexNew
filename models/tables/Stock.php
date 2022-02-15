@@ -29,7 +29,6 @@ class Stock extends ActiveRecord
                 ->where(['=','main',1]);
         }
         return $this->hasMany(Images::className(),['pos_id'=>'id']);
-
     }
 
     public function scenarios()

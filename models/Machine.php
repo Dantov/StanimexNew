@@ -23,12 +23,20 @@ class Machine {
         if (!empty($this->machineData))
             return $this->machineData;
 
-        return $this->machineData = Stock::find()
+        $stock = $this->machineData = Stock::find()
             ->with(['images'])
             ->where(['=','id',$this->stockID])
             ->orderBy('date DESC')
             ->asArray()
             ->one();
+
+        foreach ( $stock['images'] as &$image )
+        {
+            if ( !file_exists( _rootDIR_ . "/web/Stockimages/" . $image['img_name'] ) )
+                $image['img_name'] = 'no-img.png';
+        }
+
+        return $stock;
 	}
 
 	public function getMachinesCrumbs( $id = null )
@@ -70,10 +78,17 @@ class Machine {
 
         $images = $this->machineData['images'];
 
-        foreach ( $images as $image )
+        foreach ( $images as $num => $image )
         {
             if ( $image['main'] == 1 )
+            {
+                if ( !file_exists( _rootDIR_ . "/web/Stockimages/" . $image['img_name'] ) )
+                    $image['img_name'] = 'no-img.png';
+
+                $image['num'] = $num;
                 return $image;
+            }
+
         }
 
         return [];

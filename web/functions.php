@@ -1,4 +1,5 @@
 <?php
+define('_rootDIR_', $_SERVER['DOCUMENT_ROOT']);
 if ( !defined('END_AB') ) define('END_AB','end_ajax_buffer');
 
 if ( _DEV_MODE_ )

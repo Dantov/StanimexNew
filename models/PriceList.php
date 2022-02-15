@@ -19,11 +19,21 @@ class PriceList {
 
 	public function getStock()
     {
-        return Stock::find()
+        $stock = Stock::find()
             ->with(['images'])
             ->orderBy('date DESC')
             ->asArray()
             ->all();
+
+
+        foreach ( $stock as &$machine )
+        {
+            foreach ( $machine['images'] as &$image )
+                if ( !file_exists( _rootDIR_ . "/web/Stockimages/" . $image['img_name'] ) )
+                    $image['img_name'] = 'no-img.png';
+        }
+
+        return $stock;
 	}
 
 
