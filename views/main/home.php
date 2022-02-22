@@ -66,7 +66,7 @@ $this->registerJsFile('@web/js/mainSlider.js?v=' . time() );
         <div class="clearfix"></div>
         <div class="row">
             <?php foreach ( $stock as $machine ): ?>
-                <div class="col-sm-4 col-md-3" style="margin-bottom: 10px!important;">
+                <div class="col-sm-4 col-md-3" style="margin-bottom: 15px!important;">
                     <a href="<?= Url::to(["/machine/{$machine['id']}"]); ?>">
                         <?php if( $machine['status'] === 'sold' ): ?>
                             <span class="label label-danger hotLable_main">ПРОДАН</span>

@@ -5,6 +5,7 @@ use yii\web\View;
 /* @var $machine array */
 /* @var $mainImage array */
 /* @var $machineCrumbs array */
+/* @var $editBtn bool */
 
 //debug($machineCrumbs);
 $jsImgLoad = <<<JS
@@ -82,14 +83,27 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
                     <strong>Описание:</strong>
                 </p>
                 <p style="font-size: large"><?= html_entity_decode($machine['description_ru']) ?></p>
+                <br/>
+                <p>
+                    <input type="button" id="makeOrder" class="btn btn-primary" value="Сделать заказ">
+                </p>
             </div>
 
         </div><!--row-->
 
         <div class="row bg-info butt-inf">
             <input type="hidden" name="status" id="status" value="<?= $machine['status']; ?>" />
-            <small class="glyphicon glyphicon-calendar pull-left" title="Дата">&#160;<?php echo date_create( $machine['date'] )->Format('d.m.Y'); ?></small>
-            <small class="glyphicon glyphicon-eye-open pull-right" title="Просмотры">&#160;<?= $machine['views']?></small>
+            <div class="col-xs-12 col-sm-4">
+                <span class="glyphicon glyphicon-calendar pull-left" title="Дата">&#160;<?php echo date_create( $machine['date'] )->Format('d.m.Y'); ?></span>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+            <?php if ( $editBtn ): ?>
+            <a type="button" class="btn btn-outline-danger center-block" href="<?=URL::to(['/stan-admin/editmachine/'. $machine['id'] ])?>">Edit Machine</a>
+            <?php endif; ?>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <span class="glyphicon glyphicon-eye-open pull-right" title="Просмотры">&#160;<?= $machine['views']?></span>
+            </div>
             <div class="clearfix"></div>
         </div><!--section header-->
 
@@ -101,7 +115,7 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
     </div><!--container-->
 </div><!--about-->
 
-<!-- Modal -->
+<!-- Modal Images -->
 <div class="modal fade" id="ShowImageModal" tabindex="-1" role="dialog" aria-labelledby="ShowImageModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -145,6 +159,79 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Orders -->
+<div class="modal fade" id="ShowOrderModal" tabindex="-1" role="dialog" aria-labelledby="ShowOrderModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="ShowOrderModalLabel">Заказать Оборудование: </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row ">
+                    <form id="send_order_form" >
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-md-6 connm">
+                                    <label for="your-name">Ваше Имя <span id="nameValid">*</span></label>
+                                    <input type="text" class="form-control" value="" name="name" id="your-name">
+                                </div>
+                                <div class="form-group col-md-6 conem">
+                                    <label for="your-email">Ваш Email <span id="your-email">*</span></label>
+                                    <input type="email" class="form-control" value="" name="email" id="your-email">
+                                </div>
+                                <div class="form-group col-md-6 conem">
+                                    <label for="your-phone">Телефон</label>
+                                    <input type="text" class="form-control" value="" name="phone" id="your-phone">
+                                </div>
+                                <div class="form-group col-md-6 conem">
+                                    <label for="your-company">Компания</label>
+                                    <input type="text" class="form-control" value="" name="company" id="your-company">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-md-12 conmm">
+                                    <label for="your-message">Комментарий <span id="messageValid">*</span></label>
+                                    <textarea class="form-control" rows="4" cols="40" name="message" id="your-message"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12 text-center">
+                            <input type="button" class="subbtn" value="Отправить">
+                        </div>
+                        <input type="hidden" class="form-control hidden" value="<?=$machine['id']?>" name="pos_id">
+                        <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
+                    </form>
+
+                    <div class="col-md-12 text-center hidden" id="orderOK">
+                        <div class="alert alert-info" role="alert">
+                            <h4 class="alert-link">
+                                Спасибо! Заказ отправлен. В ближайшее время мы свяжемся с Вами!
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-center hidden" id="orderError">
+                        <div class="alert alert-danger" role="alert">
+                            <a href="#" type="button" class="close"><span class="glyphicon glyphicon-remove"></span></a>
+                            <h4 class="alert-link">
+                                При отправке заказа произошла ошибка! Повторите попытку позже.
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>

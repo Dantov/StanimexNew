@@ -1,5 +1,7 @@
 <?php
 
+use \yii\helpers\Url;
+
 $session = yii::$app->session;
 ?>
 <div class="machineTopBg"></div>
@@ -11,7 +13,7 @@ $session = yii::$app->session;
         <br />
         <br />
         <br />
-        <form id="login_form" method="post" action="/stan-admin/login">
+        <form id="login_form" method="post" action="<?=Url::to(['/stan-admin/login'])?>">
             <div class="row">
 
                 <div class="col-sm-2"></div>

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\tables\Users;
+use Yii;
 
 
 /**
@@ -23,10 +24,13 @@ class StanLoginForm
 
     protected $badChars = ['\'', '\\', '/', '"','*','|',':',';','`'];
 
-    public function __construct( string $login, string $password )
+    public function __construct( string $login = null, string $password = null )
     {
-        $this->login = trim( htmlentities($login) );
-        $this->password = trim( htmlentities($password) );
+        if ( $login )
+            $this->login = trim( htmlentities($login) );
+
+        if ( $password )
+            $this->password = trim( htmlentities($password) );
     }
 
     /**
@@ -50,6 +54,29 @@ class StanLoginForm
                 'badChars' => true,
             ],
         ];
+    }
+
+    public function admSessionKey( string $key )
+    {
+        switch ( $key )
+        {
+            case "set":
+                return yii::$app->session->set('st_adm',password_hash("xx123",PASSWORD_DEFAULT));
+                break;
+            case "has":
+                if ( yii::$app->session->has('st_adm') )
+                    return password_verify("xx123", yii::$app->session->get('st_adm'));
+                return false;
+                break;
+            case "dell":
+                if ( yii::$app->session->has('st_adm') )
+                    return yii::$app->session->remove('st_adm');
+                break;
+            default :
+                return false;
+        }
+
+        return false;
     }
 
 

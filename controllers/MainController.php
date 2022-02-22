@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\admin\OrdersModel;
 use app\models\Home;
 use app\models\PriceList;
 use app\models\Machine;
@@ -10,7 +11,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\StanLoginForm;
 
 class MainController extends Controller
 {
@@ -120,9 +121,43 @@ class MainController extends Controller
 
         $this->view->title = $machine['short_name_ru'];
 
-        $compact = compact(['machine','mainImage','machineCrumbs']);
+        $editBtn = false;
+        $login = new StanLoginForm();
+        if ($login->admSessionKey('has'))
+            $editBtn = true;
+
+        $compact = compact(['machine','mainImage','machineCrumbs','editBtn']);
         return $this->render('machine',$compact);
     }
+
+    public function actionOrders()
+    {
+        $request = yii::$app->request;
+        $response = yii::$app->response;
+
+        if ( !$request->isAjax )
+            return $response->redirect(['/']);
+
+        if ( $request->isPost )
+        {
+            $loaded = $request->post();
+
+            $om = new OrdersModel();
+
+            if ( $om->setOrder($loaded) )
+            {
+                // отправить по почте
+                $om->sendEmail();
+                exit(json_encode(['ok'=>'1']));
+            }
+
+
+            exit(json_encode(['errors'=>$om->myErrors]));
+        }
+
+        exit(json_encode(['debug'=>'nothing done']));
+    }
+
 
 
     /**

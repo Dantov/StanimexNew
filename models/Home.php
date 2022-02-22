@@ -52,9 +52,7 @@ class Home {
 
 	public function getWebuy()
     {
-        return Webuy::find()
-            ->asArray()
-            ->all();
+        return Webuy::find()->where(['<>','name_ru',''])->orWhere(['<>','name_en',''])->asArray()->all();
 	}
 
 }

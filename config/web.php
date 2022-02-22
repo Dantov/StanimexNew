@@ -10,6 +10,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        //'@sadm' =>  '@webroot/sadm',
     ],
     'layout' => 'stan-theme',
     'components' => [
@@ -45,22 +46,19 @@ $config = [
             ],
         ],
         'db' => $db,
-        'defaultRoute' => 'main/home',
+        'defaultRoute' => '/main/home',
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'suffix' => '',
             'rules' => [
                 '/'=> '/main/home',
-                'home'=> '/main/home',
-                'price-list'=> '/main/price-list',
-
-
                 'machine/<id:\d+>'=> '/main/machine',
+                '<action:(orders|price-list|home)>' => '/main/<action>',
 
+                'stan-admin/<action:(editmachine|deletemachine)>/<id:\d+>' => '/admin/stan-admin/<action>',
+                'stan-admin/<action:(main|webuy|orderbox|about|stock|addmachine|delete|login|logoutt)>'=>'/admin/stan-admin/<action>',
                 'stan-admin'=> '/main/login',
-                'stan-admin/login'=> '/admin/stan-admin/login',
-                'stan-admin/main'=> '/admin/stan-admin/index',
 
                 //'<action:(about|contact|login|logout)>'=>'site/<action>',
                 //'<action:\w+>'=>'site/<action>', // \w+ - любой символ от a-z и цифры 0-9

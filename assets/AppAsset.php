@@ -39,9 +39,9 @@ class AppAsset extends AssetBundle
         ];
 
         $this->js = [
-            'js/jquery-3.2.1.min.js',
+            //'js/jquery-3.2.1.min.js',
             'js/bootstrap.min.js',
-            //'js/mainSlider.js?v=' . time(),
+            'js/const.js?v=' . time(),
             'js/send_mail.js?v=' . time(),
         ];
     }

@@ -31,37 +31,6 @@ class Stock extends ActiveRecord
         return $this->hasMany(Images::className(),['pos_id'=>'id']);
     }
 
-    public function scenarios()
-    {
-        $columnsAdd = [
-            'name_ru',
-            'name_en',
-            'short_name_ru',
-            'short_name_en',
-            'description_ru',
-            'description_en',
-            'views',
-            'date',
-            'status',
-        ];
-        $columnsEdit = [
-            'id',
-            'name_ru',
-            'name_en',
-            'short_name_ru',
-            'short_name_en',
-            'description_ru',
-            'description_en',
-            'views',
-            'date',
-            'status',
-        ];
-        return [
-            self::SCENARIO_ADD => $columnsAdd,
-            self::SCENARIO_EDIT => $columnsEdit,
-        ];
-    }
-
     public function attributeLabels()
     {
         return [
@@ -75,6 +44,14 @@ class Stock extends ActiveRecord
              'date'=> 'Дата: ',
              'status'=> 'Статус: ',
         ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_ADD] = ['date'];
+        //$scenarios[self::SCENARIO_REGISTER] = ['username', 'email', 'password'];
+        return $scenarios;
     }
 
     public function rules()
@@ -104,12 +81,13 @@ class Stock extends ActiveRecord
                 'trim',
             ],
             //rule5
-            ['views', 'number'],
+            [
+                ['views'], 'number'
+            ],
             //rule6
-            ['views', function ($attribute, $params) {
-                $data = $this->$attribute;
-                if ( $data < 0 ) $this->addError($attribute, 'Кол-во просмотров должно быть положительным!');
-            }],
+            [
+                ['date','status'], 'string'
+            ],
         ];
     }
 
