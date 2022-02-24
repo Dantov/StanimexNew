@@ -3,6 +3,7 @@
 namespace app\models\admin;
 
 use app\models\tables\Orders;
+use app\models\tables\Stock;
 use Yii;
 use yii\base\Model;
 
@@ -17,11 +18,46 @@ class OrdersModel extends Model
 
     public function getOrders()
     {
-        $o = Orders::find()
+        $orders = Orders::find()
             ->orderBy('date DESC')
             ->asArray()
             ->all();
-        return $o;
+
+        $res = [
+            'mails'=>[],
+            'orders'=>[],
+        ];
+        $posIds = '';
+        foreach ( $orders as $order )
+        {
+            if ( $order['phone'] === "0-0-0" && empty($order['pos_id']) )
+            {
+                $res['mails'][] = $order;
+                continue;
+            }
+
+            $res['orders'][] = $order;
+            $posIds .= $order['pos_id'] . ',';
+        }
+
+        $stock = Stock::find()->select(['short_name_ru','short_name_en','id'])
+            ->andWhere('id IN (' . rtrim($posIds,',') . ')')
+            ->asArray()
+            ->all();
+
+        if ( $stock )
+        {
+            foreach ( $res['orders'] as &$order )
+            {
+                foreach ( $stock as $machine )
+                {
+                    if ( $machine['id'] == $order['pos_id'] )
+                        $order['machineName'] = $machine['short_name_ru'];
+                }
+            }
+        }
+
+        return $res;
     }
 
 
@@ -41,7 +77,7 @@ class OrdersModel extends Model
 
     public function parseData( array $data ) : array
     {
-        $validFields = ['name','company','email','phone','message','pos_id'];
+        $validFields = ['name','company','email','theme','phone','message','pos_id'];
 
         $result = [];
         foreach ( $data as $fieldName => $text )
@@ -78,19 +114,28 @@ class OrdersModel extends Model
         return false;
     }
 
-    public function sendEmail()
+    public function sendEmail( string $machineName = '' )
     {
         $data = $this->orderData;
         $name = $data['name'];
         $email = $data['email'];
         $message = $data['message'];
-        $subject  = $data['theme'];
+        $subject  = $data['theme']??'';
 
-        if ( empty($subject) ) $subject = "123";
+        if ( empty($subject) )
+        {
+            if ( !empty($machineName) )
+            {
+                $subject =$machineName;
+            } else {
+                $subject = "From Stanimex site";
+            }
+        }
 
         if ( empty($name) || empty($email) || empty($message) || empty($subject) ) return null;
 
-        $to  = "AlmTade s.r.o. <info@almtradesro.com>";
+        //$to  = "AlmTade s.r.o. <info@almtradesro.com>";
+        $to  = "Stanimex <stan-test@i.ua>";
 
         $c_message = " 
         <html>
@@ -104,7 +149,6 @@ class OrdersModel extends Model
 
         $headers  = "Content-type: text/html; charset=utf-8 \r\n";
         $headers .= "From: $name <$email>";
-
 
         if ( mail($to, $subject, $c_message, $headers) ) return 1;
 

@@ -5,7 +5,8 @@ use yii\helpers\Url;
 /* @var $stock array */
 /* @var $contacts array */
 
-$this->registerJsFile('@web/js/mainSlider.js?v=' . time() );
+$this->registerJsFile('@web/js/mainSlider.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>''] );
+$this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>''] );
 ?>
 <div class="slidr" id="slidr">
     <img src="/web/img/mainslidr.gif">
@@ -195,65 +196,47 @@ $this->registerJsFile('@web/js/mainSlider.js?v=' . time() );
         <div class="clearfix"></div>
 
         <div class="row">
+            <div class="col-md-12 hidden alertOKSend">
+                <div class="alert alert-success" role="alert">
+                    <h5 class="alert-link">Спасибо! В ближайшее время мы свяжемся с Вами!</h5>
+                </div>
+            </div>
+            <div class="col-md-12 hidden alertErrorSend">
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-link">При отправке сообщения произошла ошибка!</h5>
+                </div>
+            </div>
             <form id="send_mail_form" method="post" action="">
                 <div class="col-md-6 col-sm-6">
                     <div class="row">
                         <div class="form-group col-md-12 connm">
-                            <label>Ваше Имя <span id="nameValid">*</span></label>
-                            <input type="text" class="form-control" size="40" value="" name="your-name" id="your-name">
+                            <label for="your-name">Ваше Имя <span id="nameValid">*</span></label>
+                            <input type="text" class="form-control" size="40" value="" name="name" id="your-name">
                         </div>
 
                         <div class="form-group col-md-12 conem">
-                            <label>Ваш Email <span id="emailValid">*</span></label>
-                            <input type="email" class="form-control" size="40" value="" name="your-email" id="your-email">
+                            <label for="your-email">Ваш Email <span id="emailValid">*</span></label>
+                            <input type="email" class="form-control" size="40" value="" name="email" id="your-email">
                         </div>
 
                         <div class="form-group col-md-12 conem">
-                            <label>Тема <span id="subjectValid">*</span></label>
-                            <input type="text" class="form-control" size="40" value="" name="your-subject" id="your-subject">
+                            <label for="your-subject">Тема <span id="subjectValid">*</span></label>
+                            <input type="text" class="form-control" size="40" value="" name="theme" id="your-subject">
                         </div>
-                    </div><!--row-->
-                </div><!--col-md-6-->
+                    </div>
+                </div>
                 <div class="col-md-6 col-sm-6">
                     <div class="row">
                         <div class="form-group col-md-12 conmm">
-                            <label>Сообщение <span id="messageValid">*</span></label>
-                            <textarea class="form-control" rows="10" cols="40" name="your-message" id="your-message"></textarea>
+                            <label for="message">Сообщение <span id="messageValid">*</span></label>
+                            <textarea class="form-control" rows="10" cols="40" name="message" id="message"></textarea>
                         </div>
-                    </div><!--row-->
-                </div><!--col6-->
+                    </div>
+                </div>
                 <div class="clearfix"></div>
-                <?php
-                $sended = $_GET['sended'];
 
-                if ( !isset( $sended ) ) {
-                    ?>
-                    <div class="col-md-12 text-center"><input type="button" class="subbtn" value="Отправить" onclick="validall(this);"></div>
-                    <?php
-                }
-                if ( $sended == 1 ) {
-                    ?>
-                    <div class="col-md-12 text-center">
-                        <div class="alert alert-info" role="alert">
-                            <a href="#contact" type="button" class="close"><span class="glyphicon glyphicon-remove"></span></a>
-                            <h4 class="alert-link">
-                                Сообщение отправлено. В ближайшее время мы свяжемся с Вами!
-                            </h4>
-                        </div>
-                    </div>
-                    <?php
-                }
-                if ( $sended == -1 ) {
-                    ?>
-                    <div class="col-md-12 text-center">
-                        <div class="alert alert-danger" role="alert">
-                            <a href="#contact" type="button" class="close"><span class="glyphicon glyphicon-remove"></span></a>
-                            <h4 class="alert-link">
-                                При отправке сообщения произошла ошибка!
-                            </h4>
-                        </div>
-                    </div>
-                <?php } ?>
+                <div class="col-md-12 text-center"><input data-loading-text="Отправление..." type="button" class="subbtn sendMail" value="Отправить"></div>
+                <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
             </form>
 
         </div><!--row-->

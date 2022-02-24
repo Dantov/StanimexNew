@@ -53,6 +53,17 @@
             </div>
         </div>
     </div>
+    <div class="col-md-3 four-grid">
+        <div class="four-agileinfo">
+            <div class="icon">
+                <i class="glyphicon glyphicon-duplicate" aria-hidden="true"></i>
+            </div>
+            <div class="four-text">
+                <h3>Заказов</h3>
+                <h4><?= "3" ?></h4>
+            </div>
+        </div>
+    </div>
     <div class="clearfix"></div>
 </div>
 <!--//four-grids here-->

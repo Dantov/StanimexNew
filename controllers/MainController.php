@@ -138,6 +138,7 @@ class MainController extends Controller
         if ( !$request->isAjax )
             return $response->redirect(['/']);
 
+        $res = ['mail' => '', 'ok'=>'', 'errors'=>''];
         if ( $request->isPost )
         {
             $loaded = $request->post();
@@ -146,9 +147,12 @@ class MainController extends Controller
 
             if ( $om->setOrder($loaded) )
             {
+                $res['ok'] = 'OK';
                 // отправить по почте
-                $om->sendEmail();
-                exit(json_encode(['ok'=>'1']));
+                if ( $om->sendEmail($loaded['machineName']??'') )
+                    $res['mail'] = 1;
+
+                exit(json_encode($res));
             }
 
 

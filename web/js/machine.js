@@ -81,7 +81,8 @@ Orders.prototype.init = function()
     this.ordersModal = document.querySelector('#ShowOrderModal');
     if ( !this.ordersModal ) return;
 
-    this.ordersModal.querySelector('.modal-title').innerHTML += imageViewer.machineName;
+    this.machineName = imageViewer.machineName;
+    this.ordersModal.querySelector('.modal-title').innerHTML += this.machineName;
     this.sendButton = this.ordersModal.querySelector('.subbtn');
 
     this.addListeners();
@@ -101,6 +102,7 @@ Orders.prototype.addListeners = function()
 
         let form = that.ordersModal.querySelector('form');
         let formData = new FormData( form );
+            formData.append('machineName',that.machineName);
 
         $.ajax({
             url: '/orders',
@@ -116,13 +118,22 @@ Orders.prototype.addListeners = function()
                 if ( resp.ok )
                 {
                     debug("OK");
-
                     that.ordersModal.querySelector('#send_order_form').remove();
                     that.ordersModal.querySelector('#orderOK').classList.remove('hidden');
                 }
 
                 if ( resp.errors )
                 {
+                    let someErrors = that.ordersModal.querySelector('#someErrors').querySelector('.alert-link');
+                    someErrors.innerHTML = "";
+                    $.each(resp.errors, function(fieldName, errors) {
+                        $.each(errors, function(i, errorText) {
+                            someErrors.innerHTML += "<span>"+ errorText +"</span>";
+                        });
+                        someErrors.innerHTML += "<br/>";
+                    });
+                    that.ordersModal.querySelector('#someErrors').classList.remove('hidden');
+
                     debug(resp.errors);
                 }
             },

@@ -1,103 +1,83 @@
 ﻿"use strict";
 
-function validall(self) {
-	
-	var nV = name_valid();
-	var eV = email_valid();
-	var sV = subject_valid();
-	var mV = message_valid();
-	
-	if ( nV || eV || sV || mV ) return;
+function MailSender( formTag )
+{
+	this.formTag = formTag;
+	if ( !this.formTag )
+		return;
 
-	self.setAttribute('type','submit');
-	self.removeAttribute('onclick');
-	self.click;
+    this.alertOK = document.querySelector('.alertOKSend');
+    this.alertErrors = document.querySelector('.alertErrorSend');
+
+    this.sendMailButton = this.formTag.querySelector('.sendMail');
+
+	this.init();
 }
 
-function valids( inptStr ) {
-	
-	function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-	
-	function isasllspace( str ) {
-		var arr = str.split('');
-		for ( var i = 0; i < arr.length; i++ ) {
-			if ( arr[i] !== ' ' ) return false;
-		}
-		return true;
-	};
-	
-	if ( inptStr == '' || isNumeric( inptStr ) ||  isasllspace( inptStr ) ) {
-		return true;
-	} else {
-		return false;
-	}
+MailSender.prototype.init = function () {
+
+    if ( !this.sendMailButton ) return;
+    let that = this;
+
+    this.sendMailButton.addEventListener('click',function () {
+    	that.send();
+    });
+
+    debug("MailSender init");
 };
 
-function name_valid() {
-	var name = document.getElementById('your-name');
-	var nameValid = document.getElementById('nameValid');
-	
-	if ( valids( name.value ) ) {
-		nameValid.removeAttribute('class');
-		nameValid.innerHTML = "* Не верное имя!";
-		return true;
-	} else {
-		nameValid.innerHTML = "";
-		nameValid.setAttribute('class','glyphicon glyphicon-ok-sign');
-		return false;
-	}
-}
+MailSender.prototype.send = function () {
 
-function email_valid() {
-	var email = document.getElementById('your-email');
-	var emailValid = document.getElementById('emailValid');
-	
-	if ( valids( email.value ) ) {
-		emailValid.removeAttribute('class');
-		emailValid.innerHTML = "* Не верный Email!";
-		return true;
-	} else {
-		emailValid.innerHTML = "";
-		emailValid.setAttribute('class','glyphicon glyphicon-ok-sign');
-		return false;
-	}
-};
-function subject_valid() {
-	var subject = document.getElementById('your-subject');
-	var subjectValid = document.getElementById('subjectValid');
-	
-	if ( valids( subject.value ) ) {
-		subjectValid.removeAttribute('class');
-		subjectValid.innerHTML = "* Напишите тему сообщения!";
-		return true;
-	} else {
-		subjectValid.innerHTML = "";
-		subjectValid.setAttribute('class','glyphicon glyphicon-ok-sign');
-		return false;
-	}
+    let that = this;
+    let formData = new FormData( this.formTag );
+    	formData.append('contactMail',"1");
+    	formData.append('phone',"0-0-0");
+
+    $('.sendMail').button('loading');
+
+    $.ajax({
+        url: '/orders',
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(resp)
+        {
+            resp = JSON.parse(resp);
+            if ( resp.debug ) debug(resp.debug);
+
+            if ( resp.ok )
+            {
+                debug("OK");
+                that.alertOK.classList.remove('hidden');
+                that.sendMailButton.classList.add('hidden');
+
+                //$('.sendMail').button('reset');
+            }
+
+            if ( resp.errors )
+            {
+                let someErrors = that.alertErrors.querySelector('.alert-link');
+                someErrors.innerHTML = "";
+                $.each(resp.errors, function(fieldName, errors) {
+                    $.each(errors, function(i, errorText) {
+                        someErrors.innerHTML += "<span>"+ errorText +"</span>";
+                    });
+                    someErrors.innerHTML += "<br/>";
+                });
+                that.alertErrors.classList.remove('hidden');
+                debug(resp.errors);
+
+                $('.sendMail').button('reset');
+            }
+        },
+        error: function(e)
+        {
+            alert('Ошибка! Попробуйте снова.');
+            console.log(e);
+        }
+    });
+
 };
 
-function message_valid() {
-	var message = document.getElementById('your-message');
-	var messageValid = document.getElementById('messageValid');
-	
-	function isasllspace( str ) {
-		var arr = str.split('');
-		for ( var i = 0; i < arr.length; i++ ) {
-			if ( arr[i] !== ' ' ) return false;
-		}
-		return true;
-	};
-	
-	if ( isasllspace( message.value ) ) {
-		messageValid.removeAttribute('class');
-		messageValid.innerHTML = "* Напишите сообщение здесь!";
-		return true;
-	} else {
-		messageValid.innerHTML = "";
-		messageValid.setAttribute('class','glyphicon glyphicon-ok-sign');
-		return false;
-	}
-};
+let mails = new MailSender( document.querySelector('#send_mail_form') );

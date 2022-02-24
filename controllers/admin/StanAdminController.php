@@ -379,11 +379,11 @@ class StanAdminController extends Controller
         $om = new OrdersModel();
         $orders = $om->getOrders();
 
+        //debug($orders,'$orders',1);
+
         $compact = ['orders'];
         return $this->render('orders', compact($compact));
     }
-
-
 
     /**
      * Logout action.

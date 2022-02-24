@@ -29,7 +29,7 @@ class Orders extends ActiveRecord
     public function rules()
     {
         return [
-            [['name','email','phone',], 'required','message' => 'Имя E-mail и Телефон необходямы к заполнению.'],
+            [['name','email','phone'], 'required','message' => 'Имя E-mail и Телефон необходямы к заполнению.'],
             //rule 1
             [
                 [

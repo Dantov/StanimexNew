@@ -178,6 +178,11 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
             <div class="modal-body">
 
                 <div class="row ">
+                    <div class="col-md-12 hidden" id="someErrors">
+                        <div class="alert alert-success" role="alert">
+                            <h5 class="alert-link"></h5>
+                        </div>
+                    </div>
                     <form id="send_order_form" >
                         <div class="col-sm-12">
                             <div class="row">
@@ -214,7 +219,6 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
                         <input type="hidden" class="form-control hidden" value="<?=$machine['id']?>" name="pos_id">
                         <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
                     </form>
-
                     <div class="col-md-12 text-center hidden" id="orderOK">
                         <div class="alert alert-info" role="alert">
                             <h4 class="alert-link">

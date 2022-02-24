@@ -33,16 +33,14 @@ class AppAsset extends AssetBundle
 
         $this->css = [
             'css/bootstrap.min.css',
-            'css/bootstrap-theme.min.css',
+            //'css/bootstrap-theme.min.css',
             'css/style.css?v=' . time(),
             'fontawesome-6/css/fontawesome.min.css',
         ];
 
         $this->js = [
-            //'js/jquery-3.2.1.min.js',
             'js/bootstrap.min.js',
             'js/const.js?v=' . time(),
-            'js/send_mail.js?v=' . time(),
         ];
     }
 }
