@@ -92,7 +92,7 @@ StanAdmAsset::register($this);
                         </ul>
                     </li>
                     <li id="menu-academico" ><a href="<?=Url::to('/stan-admin/addmachine')?>"><i class="fa fa-plus"></i><span>Add Machine</span><div class="clearfix"></div></a></li>
-                    <li><a href="<?= Url::to('/stan-admin/gallery')?>"><i class="fa fa-picture-o" aria-hidden="true"></i><span>Gallery</span><div class="clearfix"></div></a></li>
+                    <li><a href="<?= Url::to('/stan-admin/shipments')?>"><i class="fa fa-picture-o" aria-hidden="true"></i><span>Shipments</span><div class="clearfix"></div></a></li>
                     <li id="menu-academico" ><a href="<?=Url::to('/stan-admin/orderbox')?>"><i class="fa fa-envelope nav_icon"></i><span>Order Box</span><div class="clearfix"></div></a></li>
                 </ul>
             </div>

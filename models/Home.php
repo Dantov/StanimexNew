@@ -2,6 +2,7 @@
 namespace app\models;
 
 
+use app\models\tables\Shipments;
 use app\models\tables\Webuy;
 use app\models\tables\Stock;
 use app\models\tables\Images;
@@ -54,5 +55,48 @@ class Home {
     {
         return Webuy::find()->where(['<>','name_ru',''])->orWhere(['<>','name_en',''])->asArray()->all();
 	}
+
+    public function getShipments( bool $all = false )
+    {
+        $s = Shipments::find()
+            ->where(['<>','img',''])
+            ->orderBy('date ASC');
+
+        if ( !$all )
+            $s->limit(4);
+
+        $shipments = $s->asArray()->all();
+
+        foreach ( $shipments as &$shipment )
+        {
+            if ( isset($shipment['img']) )
+            {
+                if ( !empty($shipment['img']) )
+                {
+                    $shipment['img'] = explode('--!!--',$shipment['img']);
+                } else {
+                    $shipment['img'] = [];
+                }
+            }
+            $shipment['date'] = (new \DateTime($shipment['date']))->format('d.m.Y');
+        }
+
+        return $shipments;
+    }
+
+    public function getSliderImages( $path = _rootDIR_ . "/web/img/sliderImages" ) : array
+    {
+        $d = dir($path);
+        $result = [];
+        while (false !== ($entry = $d->read())) {
+            if ( $entry === "." || $entry === ".." )
+                continue;
+            $result[] = $entry;
+        }
+
+        $d->close();
+
+        return $result;
+    }
 
 }

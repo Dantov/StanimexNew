@@ -37,14 +37,21 @@ class Uploader
     }
 
     /**
-     * @param string $machineID
+     * @param string $id
+     * @param string $fieldName
+     * @param string $path
      * @return array|bool
      * @throws \Exception
      */
-    public function upload( $machineID = '' )
+    public function upload( $id = '', string $fieldName='', string $path='' )
     {
+        if ( !$fieldName )
+            $fieldName = 'images';
+        if ( !$path )
+            $path = _rootDIR_ . '/web/Stockimages/';
+
         $files = Files::instance();
-        $hua = $files->makeHUA('images');
+        $hua = $files->makeHUA($fieldName);
 
         $oneAtLeast = false;
 
@@ -59,8 +66,8 @@ class Uploader
             $info = new \SplFileInfo($fileData['name']);
             $extension = mb_strtolower( pathinfo($info->getFilename(), PATHINFO_EXTENSION) );
 
-            $newFileName = $machineID . "_" . randomStringChars(12,'en','symbols').time() . '.' . $extension;
-            $uploadPath = _rootDIR_ . '/web/Stockimages/' . $newFileName;
+            $newFileName = $id . "_" . randomStringChars(12,'en','symbols').time() . '.' . $extension;
+            $uploadPath = $path . $newFileName;
 
             if ( $files->upload($fileData['tmp_name'], $uploadPath) )
             {

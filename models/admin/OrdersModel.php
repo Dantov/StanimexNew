@@ -39,11 +39,13 @@ class OrdersModel extends Model
             $res['orders'][] = $order;
             $posIds .= $order['pos_id'] . ',';
         }
-
-        $stock = Stock::find()->select(['short_name_ru','short_name_en','id'])
-            ->andWhere('id IN (' . rtrim($posIds,',') . ')')
-            ->asArray()
-            ->all();
+        $posIds = rtrim($posIds,',');
+        $stock = [];
+        if ( $posIds )
+            $stock = Stock::find()->select(['short_name_ru','short_name_en','id'])
+                ->andWhere('id IN (' . rtrim($posIds,',') . ')')
+                ->asArray()
+                ->all();
 
         if ( $stock )
         {

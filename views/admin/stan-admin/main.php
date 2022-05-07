@@ -1,7 +1,10 @@
 <?php
+use yii\helpers\Url;
 /* @var $uniqueUsers integer */
 /* @var $totalViews integer  */
 /* @var $topMachine integer  */
+/* @var $ordersCount integer  */
+
 ?>
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/">Home</a> <i class="fa fa-angle-right"></i></li>
@@ -10,7 +13,7 @@
 <div class="agileinfo-grap">
     <div class="agileits-box">
         <header class="agileits-box-header clearfix">
-            <h3>Statistics</h3>
+            <h3>Статистика за сутки</h3>
             <div class="toolbar"></div>
         </header>
         <div class="agileits-box-body clearfix">
@@ -49,7 +52,9 @@
             </div>
             <div class="four-text">
                 <h3>Топ Позиция</h3>
-                <h4><?= $topMachine ?></h4>
+                <h4>
+                    <a href="<?=Url::to('/machine/'. $topMachine['id'])?>" title="Просмотр"><?=$topMachine['short_name_ru']??$topMachine['short_name_en']??"" ?></a>
+                </h4>
             </div>
         </div>
     </div>
@@ -60,7 +65,7 @@
             </div>
             <div class="four-text">
                 <h3>Заказов</h3>
-                <h4><?= "3" ?></h4>
+                <h4><?= $ordersCount ?></h4>
             </div>
         </div>
     </div>

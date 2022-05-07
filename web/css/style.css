@@ -275,76 +275,7 @@ a:focus {
 .cpnav .nav > li > a:hover {
     background-color: transparent;
 }
-.slidr {
-	position: relative;
-	box-shadow: inset 0 0 100px 2px rgba(0,0,0,1);
-	transition: all ease-in 1s;
-	-webkit-transition: all ease-in 1s;
-	-ms-transition: all ease-in 1s;
-}
-.slide0 {
-	background: #49708f url('../img/sliderImages/slide_01.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: center center;
-}
-.slide1 {
-	background: #49708f url('../img/sliderImages/slide_03.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: center center;
-}
-.slide2 {
-	background: #49708f url('../img/sliderImages/slide_04.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: top center;
-}
-.slide3 {
-	background: #49708f url('../img/sliderImages/slide_05.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: center center;
-}
-.slide4 {
-	background: #49708f url('../img/sliderImages/slide_06.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: center center;
-}
-.slide5 {
-	background: #49708f url('../img/sliderImages/slide_07.jpg') 0 0 no-repeat;
-	background-size: 100%;
-    background-position: bottom center;
-}
-.slidr img {
-	position: relative;
-    width: 60%;
-    border-bottom: 3px solid #076c4e;
-	z-index: -2;
-}
-.buttons{
-  margin-left: 50%;
-  position: absolute;
-  left:-105px;
-  margin-top: -55px;
-  top: 100%;
-  z-index: 10;
-  font-size: 0px;
-}
-.controls{
-  background: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 0px;
-  font-size: 20px;
-  cursor: pointer;
-  /*border: 2px solid #fff;*/
-  margin: 0px 0px 0px 10px;
-  width: 60px;
-  opacity: 0.7;
-}
-.controls:hover,
-.controls:focus{
-  background: #eee;
-  color: #333;
-  opacity: 1;
-}
+
 
 .call-to-action {
     background-color: #18c08f;
@@ -459,6 +390,7 @@ a:focus {
 	border-bottom: 1px solid #d2d2d2;
 }
 .projects {
+    border-bottom: 1px solid #d2d2d2;
     background-color: #f2f2f2;
     padding-bottom: 100px;
 }
@@ -694,7 +626,107 @@ a:focus {
 	opacity: 0.7;
 	cursor: pointer;
 }
+.buttons{
+	display: block;
+  margin-left: 50%;
+  position: absolute;
+  left:-105px;
+  margin-top: -55px;
+  top: 100%;
+  z-index: 10;
+  font-size: 0px;
+}
+.controls{
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 0px;
+  font-size: 20px;
+  cursor: pointer;
+  /*border: 2px solid #fff;*/
+  margin: 0px 0px 0px 10px;
+  width: 60px;
+  opacity: 0.7;
+}
+.controls:hover,
+.controls:focus{
+  background: #eee;
+  color: #333;
+  opacity: 1;
+}
+.slidr-small {
+    width: 1px!important;
+    height: 1px!important;
+}
+.slidr {
+	position: relative;
+	box-shadow: inset 0 0 100px 2px rgba(0,0,0,1);
+	transition: all ease-in 1s;
+	-webkit-transition: all ease-in 1s;
+	-ms-transition: all ease-in 1s;
+}
+.slide0 {
+	background: #49708f url('../img/sliderImages/slide_01.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: center left;
+}
+.slide1 {
+	background: #49708f url('../img/sliderImages/slide_03.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: top center;
+}
+.slide2 {
+	background: #49708f url('../img/sliderImages/slide_04.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: right center;
+}
+.slide3 {
+	background: #49708f url('../img/sliderImages/slide_05.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: bottom center;
+}
+.slide4 {
+	background: #49708f url('../img/sliderImages/slide_06.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: center center;
+}
+.slide5 {
+	background: #49708f url('../img/sliderImages/slide_07.jpg') 0 0 no-repeat;
+	background-size: 100%;
+    background-position: center center;
+}
+.slidr1 img {
+	position: relative;
+    width: 60%;
+    border-bottom: 3px solid #076c4e;
+	z-index: -2;
+}
+.stan-logo{
+    background: url('../img/logoN.png') 0 0 no-repeat;
+    background-size: cover;
+    position: relative;
+    top: 9%;
+    left: -10%;
+    width: 279px;
+    height: 109px;
+}
 @media only screen and (max-width: 767px) {
+	.buttons{
+		display: none;
+	}
+	.slidr {
+        background-size: cover!important;
+	}
+    .stan-logo{
+        background: url('../img/logoN.png') 0 0 no-repeat;
+        background-size: cover;
+        position: relative;
+        top: 56%;
+        left: 0%;
+        width: 175px;
+        height: 68px;
+    }
+
     .cpnav .navbar-brand { 
         padding:3px 10px;
 	}
@@ -750,8 +782,17 @@ a:focus {
 	}
 
 }
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-	
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+    .slidr {
+        background-size: cover!important;
+    }
+    .stan-logo{
+        position: absolute;
+        top: 45%;
+        left: 0;
+        width: 175px;
+        height: 68px;
+    }
 }
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
 	.navbar-brand img {
@@ -814,17 +855,49 @@ a:focus {
 .loginBtn:hover {
     opacity: 0.5!important;
 }
-.mt-60 {
-    margin-top: 60px;!important;
+.mb1 {
+    margin-bottom: 5px;!important;
 }
-.stan-logo{
-    background: url('../img/logo.png') 0 0 no-repeat;
-    background-size: cover;
-    position: relative;
-    top: 10%;
-    left: -10%;
-    width: 279px;
-    height: 98px;
+.mb2 {
+    margin-bottom: 10px;!important;
+}
+.mb3 {
+    margin-bottom: 15px;!important;
+}
+.mb4 {
+    margin-bottom: 20px;!important;
+}
+.mb5 {
+    margin-bottom: 25px;!important;
+}
+.mb-20 {
+    margin-bottom: 20px;!important;
+}
+.mt-90 {
+    margin-top: 90px;!important;
+}
+.mt-150 {
+    margin-top: 150px;!important;
+}
+.p0 {
+    padding: 0px!important;
+}
+.p1 {
+    padding: 5px!important;
+}
+.p2 {
+    padding: 10px!important;
+}
+.p3 {
+    padding: 15px!important;
+}
+.plr2 {
+    padding-left: 10px!important;
+    padding-right: 10px!important;
+}
+.plr3 {
+    padding-left: 15px!important;
+    padding-right: 15px!important;
 }
 .machineTopBg {
     position: absolute;

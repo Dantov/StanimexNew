@@ -1,14 +1,11 @@
 <?php
-
 /* @var $this \yii\web\View */
 /* @var $content string */
-
 
 use yii\helpers\Url;
 use app\assets\AppAsset;
 use app\widgets\Alert;
 use yii\bootstrap4\Html;
-
 
 AppAsset::register($this);
 ?>
@@ -24,7 +21,7 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
 
-    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/web/img/favicon.png">
     <title>Stanimex - металлорежущие станки и оборудование</title>
 
     <!-- Google font -->
@@ -64,11 +61,12 @@ AppAsset::register($this);
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a onClick="$('.slidr').animatescroll({scrollSpeed:2000, padding:80});" href="<?= Url::to(['/']) ?>">Домой</a></li>
-                        <li><a onClick="$('.about').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#about']) : '#about' ?>">О Нас</a></li>
+                        <li><a onClick="$('.about').animatescroll({scrollSpeed:2000, padding:80});" href="<?= !$this->params['isHome'] ? Url::to(['/home#about']) : '#about' ?>">О Нас</a></li>
                         <li><?= \yii\helpers\Html::a('Прайс-Лист', Url::to(['/price-list']) ) ?></li>
-                        <li><a onClick="$('.hotsell').animatescroll({scrollSpeed:2000, padding:80});" class="hot" href="<?= $this->params['isPriceList'] ? Url::to(['/home#hotsell']) : '#hotsell' ?>"><strong>Срочно!</strong></a></li>
-                        <li><a onClick="$('.webuy').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#webuy']) : '#webuy' ?>">Мы Покупаем</a></li>
-                        <li><a onClick="$('.contact').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#contact']) : '#contact' ?>">E-mail</a></li>
+                        <li><a onClick="$('.hotsell').animatescroll({scrollSpeed:2000, padding:80});" class="hot" href="<?= !$this->params['isHome'] ? Url::to(['/home#hotsell']) : '#hotsell' ?>"><strong>Срочно!</strong></a></li>
+                        <li><a onClick="$('.webuy').animatescroll({scrollSpeed:2000, padding:80});" href="<?= !$this->params['isHome'] ? Url::to(['/home#webuy']) : '#webuy' ?>">Мы Покупаем</a></li>
+                        <li><?= \yii\helpers\Html::a('Отгрузки', Url::to(['/shipment']) ) ?></li>
+                        <li><a onClick="$('.contact').animatescroll({scrollSpeed:2000, padding:80});" href="<?= !$this->params['isHome'] ? Url::to(['/home#contact']) : '#contact' ?>">E-mail</a></li>
                     </ul>
                     <ul class="loginBtn nav">
                         <li>
@@ -102,11 +100,11 @@ AppAsset::register($this);
                     <div class="col-md-6 ftnav col-md-offset-2 col-sm-6">
                         <ul>
                             <li><a onClick="$('.slidr').animatescroll({scrollSpeed:2000, padding:80});" href="<?= Url::to(['/']) ?>">Домой</a></li>
-                            <li><a onClick="$('.about').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#about']) : '#about' ?>">О Нас</a></li>
+                            <li><a onClick="$('.about').animatescroll({scrollSpeed:2000, padding:80});" href="<?= !$this->params['isHome'] ? Url::to(['/home#about']) : '#about' ?>">О Нас</a></li>
                             <li><?= \yii\helpers\Html::a('Прайс-Лист', Url::to(['/price-list']) ) ?></li>
-                            <li><a onClick="$('.hotsell').animatescroll({scrollSpeed:2000, padding:80});" class="hot" href="<?= $this->params['isPriceList'] ? Url::to(['/home#hotsell']) : '#hotsell' ?>"><strong>Срочно!</strong></a></li>
-                            <li><a onClick="$('.webuy').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#webuy']) : '#webuy' ?>">Мы Покупаем</a></li>
-                            <li><a onClick="$('.contact').animatescroll({scrollSpeed:2000, padding:80});" href="<?= $this->params['isPriceList'] ? Url::to(['/home#contact']) : '#contact' ?>">E-mail</a></li>
+                            <li><a onClick="$('.hotsell').animatescroll({scrollSpeed:2000, padding:80});" class="hot" href="<?= !$this->params['isHome'] ? Url::to(['/home#hotsell']) : '#hotsell' ?>"><strong>Срочно!</strong></a></li>
+                            <li><a onClick="$('.webuy').animatescroll({scrollSpeed:2000, padding:80});" href="<?= !$this->params['isHome'] ? Url::to(['/home#webuy']) : '#webuy' ?>">Мы Покупаем</a></li>
+                            <li><?= \yii\helpers\Html::a('Отгрузки', Url::to(['/shipment']) ) ?></li>
                         </ul>
                     </div>
                     <div class="col-xs-12 copy padd-bott-copy">

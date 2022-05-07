@@ -7,7 +7,8 @@ use yii\helpers\Url;
 <div class="clearfix"></div>
 <div class="service">
     <div class="container">
-
+        <br />
+        <br />
         <div class="col-md-12 sect-headr pricelist">
             <h2>Прайс-<span>Лист</span></h2>
             <h4 id="date"></h4>

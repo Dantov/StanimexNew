@@ -2,6 +2,7 @@
 
 if ( document.getElementById('add_img') )
 {
+
     document.getElementById('add_img').addEventListener('click',function () {
 
         let uploadInput = document.querySelector('.uploadImagesInput');
@@ -11,18 +12,18 @@ if ( document.getElementById('add_img') )
             console.log(this.files);
 
             let machineForm = document.createElement('form');
-                machineForm.setAttribute('enctype',"multipart/form-data");
+            machineForm.setAttribute('enctype',"multipart/form-data");
 
-            let machineID = document.getElementById('machineID').value;
+            let shipmentID = document.getElementById('shipmentID').value;
             let formData = new FormData( machineForm );
-                formData.append('uploadImages', machineID);
+            formData.append('shipmentID', shipmentID);
 
             $.each(this.files, function (i, file) {
                 formData.append('images[]',file);
             });
 
             $.ajax({
-                url: '/stan-admin/editmachine/' . machineID,
+                url: '/stan-admin/shipment/' . shipmentID,
                 data: formData,
                 processData: false,
                 contentType: false,
@@ -57,7 +58,6 @@ if ( document.getElementById('add_img') )
                         $('#uploadImgModal').modal('hide');
                         alert(resp.errors);
                     }
-
                 },
                 error: function(e)
                 {
@@ -74,12 +74,12 @@ if ( document.getElementById('add_img') )
 function preview(file, i) {
 
     let newImgRow = document.querySelector('.protoImgRow').cloneNode(true);
-        newImgRow.classList.remove('protoImgRow');
-        newImgRow.classList.remove('hidden');
-        newImgRow.setAttribute('data-file-id', i);
+    newImgRow.classList.remove('protoImgRow');
+    newImgRow.classList.remove('hidden');
+    newImgRow.setAttribute('data-file-id', i);
 
     let imgTag = newImgRow.querySelector('img');
-        imgTag.setAttribute('src', file);
+    imgTag.setAttribute('src', file);
 
     // вставляем картинку только после всех изменений
     let add_bef_this = document.getElementById('add_bef_this');
@@ -104,7 +104,7 @@ function dellImgPreview(self)
     //self.parentElement.remove();
 }
 
-function removeImgFromPos(self, imgID)
+function removeImgFromPos(self, rowID, imgName)
 {
     let dell = confirm('Убрать картинку из этой позиции?');
     if ( !dell ) return;
@@ -112,7 +112,8 @@ function removeImgFromPos(self, imgID)
     $.ajax({
         url: '/stan-admin/delete',
         data: {
-            removeImage: imgID,
+            rowID: rowID,
+            removeImageSp: imgName,
         },
         type: 'POST',
         dataType: 'json',
@@ -139,8 +140,8 @@ function removeImgFromPos(self, imgID)
 function dellPosition(id)
 {
     let dell = confirm('Удалить позицию целиком?');
-    
+
     if (!dell) return;
-    
-    location.href = '/stan-admin/deletemachine/' + id;
+
+    location.href = '/stan-admin/deleteshipment/' + id;
 }

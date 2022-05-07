@@ -58,14 +58,15 @@ class StanLoginForm
 
     public function admSessionKey( string $key )
     {
+        $pwd = "xq!rvaF(Ex45v120--3";
         switch ( $key )
         {
             case "set":
-                return yii::$app->session->set('st_adm',password_hash("xx123",PASSWORD_DEFAULT));
+                return yii::$app->session->set('st_adm',password_hash($pwd,PASSWORD_DEFAULT));
                 break;
             case "has":
                 if ( yii::$app->session->has('st_adm') )
-                    return password_verify("xx123", yii::$app->session->get('st_adm'));
+                    return password_verify($pwd, yii::$app->session->get('st_adm'));
                 return false;
                 break;
             case "dell":

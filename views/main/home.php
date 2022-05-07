@@ -1,30 +1,90 @@
 <?php
 use yii\helpers\Url;
+use yii\web\View;
 
 /* @var $aboutUs array */
+/* @var $weBuy array */
 /* @var $stock array */
 /* @var $contacts array */
-
-$this->registerJsFile('@web/js/mainSlider.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>''] );
+/* @var $shipments array */
+/* @var $sliderImg array */
+$imgEncode = json_encode($sliderImg,JSON_UNESCAPED_UNICODE);
+$js = <<<JS
+    let _sliderImages_ = {$imgEncode};
+    //console.log(sliderImages);
+JS;
+$this->registerJs($js, View::POS_BEGIN );
+$this->registerJsFile('@web/js/StanSlider.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>''] );
 $this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>''] );
 ?>
-<div class="slidr" id="slidr">
-    <img src="/web/img/mainslidr.gif">
-    <div class="container">
-        <div class="row position-relative">
-            <div class="col-sm-12">
-                <span class="bg-light border-dark"></span>
+<a name="hotsell"></a>
+<div class="slidr slidr-small" data-current-slide="" id="slidr">
+    <div class="container-fluid">
+        <div class="row mt-90 mb-20">
+            <div class="col-sm-12 text-center mb5">
+                <h2 class=""><span class="p1 plr3" style="font-size: 1em; background-color: rgba(255,255,255,0.71); color: #18c08f;">
+                        <span style="color: #2c2c2c;">Срочная</span>&nbsp;
+                        <span style="text-shadow: 1px 1px 1px #2c2c2c;">Продажа</span>
+                </h2>
             </div>
-        </div>
+            <?php foreach ( $stock as $machine ): ?>
+                <div class="col-sm-6 col-md-3" style="margin-bottom: 15px!important;">
+                    <a href="<?= Url::to(["/machine/{$machine['id']}"]); ?>">
+                        <?php if( $machine['status'] === 'sold' ): ?>
+                            <span class="label label-danger hotLable_main">ПРОДАН</span>
+                        <?php endif; ?>
+                        <?php if( $machine['status'] === 'hot' ): ?>
+                            <span class="label label-success hotLable_main">
+                                  <span class="glyphicon glyphicon-fire"></span>Горячий
+                                </span>
+                        <?php endif; ?>
+
+                        <div id="carousel-machine-<?=$machine['id']?>" class="carousel slide" data-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <?php foreach ( $machine['images'] as $k => $image ): ?>
+                                    <div class="item <?= $k==0 ? "active" : "" ?>" style="max-height: 100%!important;">
+                                        <div class="ratio">
+                                            <div class="ratio-inner ratio-4-3">
+                                                <div class="ratio-content">
+                                                    <div class="image-zoom responsive">
+                                                        <center>
+                                                            <img src="/web/Stockimages/<?=$image['img_name']?>" alt="<?=$machine['name_ru']?>" style="max-width: 100%;!important;">
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div class="carousel-caption p0" style="bottom: 0px!important;">
+                                    <h3 style="text-shadow: #0f0f0f;"><?=$machine['short_name_ru']?></h3>
+                                </div>
+                            </div>
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-machine-<?=$machine['id']?>" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-machine-<?=$machine['id']?>" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </a>
+                </div><!--item-->
+            <?php endforeach; ?>
+        </div><!--row-->
     </div>
-    <div class="buttons">
+    <div class="buttons hidden">
         <button class="controls" id="previous">&lt;</button>
         <button class="controls" id="pause">&#10074;&#10074;</button>
         <button class="controls" id="next">&gt;</button>
     </div>
+
 </div><!--slider-->
 
-<div class="col-md-12 call-to-action p0"></div>
+<div class="col-md-12 call-to-action p0" style="font-size: 0.2em">&nbsp;</div>
 
 <div class="clearfix"></div>
 
@@ -57,74 +117,6 @@ $this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\Y
     </div><!--container-->
 </div><!--about-->
 
-<div class="service hotsell">
-    <div class="container">
-        <div class="col-md-12 sect-headr">
-            <h2>С<span>рочно</span></h2>
-            <h4>Наше оборудование для срочной продажи</h4>
-        </div><!--section header-->
-
-        <div class="clearfix"></div>
-        <div class="row">
-            <?php foreach ( $stock as $machine ): ?>
-                <div class="col-sm-4 col-md-3" style="margin-bottom: 15px!important;">
-                    <a href="<?= Url::to(["/machine/{$machine['id']}"]); ?>">
-                        <?php if( $machine['status'] === 'sold' ): ?>
-                            <span class="label label-danger hotLable_main">ПРОДАН</span>
-                        <?php endif; ?>
-                        <?php if( $machine['status'] === 'hot' ): ?>
-                            <span class="label label-success hotLable_main">
-                              <span class="glyphicon glyphicon-fire"></span>Горячий
-                            </span>
-                        <?php endif; ?>
-
-                        <div id="carousel-machine-<?=$machine['id']?>" class="carousel slide" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                            <?php foreach ( $machine['images'] as $k => $image ): ?>
-                                <li data-target="#carousel-machine-<?=$machine['id']?>" data-slide-to="<?=$k?>" class="<?= $k==0 ? "active" : "" ?>"></li>
-                            <?php endforeach; ?>
-                            </ol>
-
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner" role="listbox">
-                                <?php foreach ( $machine['images'] as $k => $image ): ?>
-                                <div class="item <?= $k==0 ? "active" : "" ?>" style="max-height: 100%!important;">
-                                    <div class="ratio">
-                                        <div class="ratio-inner ratio-4-3">
-                                            <div class="ratio-content">
-                                                <div class="image-zoom responsive">
-                                                    <center>
-                                                        <img src="/web/Stockimages/<?=$image['img_name']?>" alt="<?=$machine['name_ru']?>" style="max-width: 100%;!important;">
-                                                    </center>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                                <div class="carousel-caption">
-                                    <h3 style="text-shadow: #0f0f0f"><?=$machine['short_name_ru']?></h3>
-                                </div>
-                            </div>
-
-                            <!-- Controls -->
-                            <a class="left carousel-control" href="#carousel-machine-<?=$machine['id']?>" role="button" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="right carousel-control" href="#carousel-machine-<?=$machine['id']?>" role="button" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                    </a>
-                </div><!--item-->
-            <?php endforeach; ?>
-        </div><!--row-->
-    </div>
-</div>
-
 <a name="webuy"></a>
 <div class="projects webuy">
     <div class="container">
@@ -139,13 +131,13 @@ $this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\Y
             <table class="table table-hover">
                 <thead>
                 <tr class="">
-                    <th>№</th><th>Наименование</th>
+                    <th>Наименование</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ( $weBuy as $d => $itemMachine ): ?>
                     <tr>
-                        <td><?= $d++;?></td><td><?php echo $itemMachine['name_ru']; ?></td>
+                        <td><?php echo $itemMachine['name_ru']; ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -154,6 +146,59 @@ $this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\Y
 
     </div><!--container-->
 </div><!--projects-->
+
+<div class="service shipments">
+    <div class="container">
+        <div class="col-md-12 sect-headr">
+            <h2>Последние <span>Отгрузки</span></h2>
+            <h4>Наше оборудование при погрузке</h4>
+        </div><!--section header-->
+
+        <div class="clearfix"></div>
+        <div class="row">
+            <?php foreach ( $shipments as $shipment ): ?>
+                <div class="col-sm-4 col-md-3" style="margin-bottom: 15px!important;">
+                    <a href="<?= Url::to(["/shipment"]); ?>">
+                        <div id="carousel-shipment-<?=$shipment['id']?>" class="carousel slide" data-ride="carousel">
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <?php foreach ( $shipment['img'] as $k => $image ): ?>
+                                    <div class="item <?= $k==0 ? "active" : "" ?>" style="max-height: 100%!important;">
+                                        <div class="ratio">
+                                            <div class="ratio-inner ratio-4-3">
+                                                <div class="ratio-content">
+                                                    <div class="image-zoom responsive">
+                                                        <center>
+                                                            <img src="/web/shipments/<?=$image?>" alt="<?=$shipment['stock']['short_name_ru']?>" style="max-width: 100%;!important;">
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div class="carousel-caption">
+                                    <h3 style="text-shadow: #0f0f0f"><?=$shipment['description_ru']??$shipment['description_en']?></h3>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-shipment-<?=$shipment['id']?>" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-shipment-<?=$shipment['id']?>" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </a>
+                </div><!--item-->
+            <?php endforeach; ?>
+        </div><!--row-->
+    </div>
+</div>
 
 <!--Brands-->
 <div class="clients">
@@ -183,7 +228,9 @@ $this->registerJsFile('@web/js/send_mail.js?v=' . time(),['depends'=>['yii\web\Y
         </div>
     </div>
 </div>
-
+<div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d906.9315787503408!2d36.2369984398198!3d49.98904947577284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sru!4v1508611878073" height="444" style="border-bottom:3px solid #18c08f;width:100%; border-top:0 none; border-left:0 none; border-right:0 none;"></iframe>
+</div><!--map-->
 <!--Contacts Start-->
 <a name="contact"></a>
 <div class="contact">

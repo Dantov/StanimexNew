@@ -25,6 +25,10 @@ $this->registerJsFile('@web/js/machine.js?v=' . time(),['depends'=>['yii\web\Yii
     <div class="container">
         <br />
         <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <div class="row">
             <a class="text-info pull-left" href="<?= Url::to(['/machine/' . $machineCrumbs['prev']['id']] ) ?>" id="topprev"><h4><?=
                     isset($machineCrumbs['prev']['short_name_ru']) ? "←" . $machineCrumbs['prev']['short_name_ru'] : ""; ?></h4>

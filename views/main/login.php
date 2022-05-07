@@ -13,6 +13,7 @@ $session = yii::$app->session;
         <br />
         <br />
         <br />
+        <?php //debug(password_hash("bas2022_Stan",PASSWORD_DEFAULT))?>
         <form id="login_form" method="post" action="<?=Url::to(['/stan-admin/login'])?>">
             <div class="row">
 

@@ -5,6 +5,7 @@ use yii\web\View;
 /* @var $machine array */
 /* @var $images array */
 /* @var $machineCrumbs array */
+/* @var $shipmentID int */
 $session = yii::$app->session;
 $this->registerJsFile('@web/sadm/js/uploadFile.js?v=' . time(),['depends'=>['yii\web\YiiAsset'],'defer'=>'']);
 ?>
@@ -160,6 +161,20 @@ $this->registerJsFile('@web/sadm/js/uploadFile.js?v=' . time(),['depends'=>['yii
                 <input type="hidden" id="machineID" name="machineID" value="<?=$machine['id'] ?>" />
                 <input type="submit" class="btn btn-primary" value="Сохранить">
                 <input type="reset" class="btn btn-default" value="Reset">
+
+                <?php if( !$shipmentID ): ?>
+                    <a href="<?=URL::to(['/stan-admin/shipment/','a'=>'add','pos_id'=>$machine['id']])?>" class="btn btn-default">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Add new shipment
+                    </a>
+                <?php endif; ?>
+                <?php if( $shipmentID ): ?>
+                    <a href="<?=URL::to(['/stan-admin/shipment/'.$shipmentID,'a'=>'edit'])?>" class="btn btn-default">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Edit shipment
+                    </a>
+                <?php endif; ?>
+
                 <a class="btn btn-default pull-right" role="button" onclick="dellPosition(<?=$machine['id'] ?>)">
                     <span class="glyphicon glyphicon-remove"></span>
                     Delete Machine
@@ -187,4 +202,16 @@ $this->registerJsFile('@web/sadm/js/uploadFile.js?v=' . time(),['depends'=>['yii
         <span class="glyphicon glyphicon-remove"></span>
     </a>
     <div class="clearfix"></div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="uploadImgModal" tabindex="-1" role="dialog" aria-labelledby="uploadImgModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Images are uploading. Please wait...
+            </div>
+        </div>
+    </div>
 </div>

@@ -123,3 +123,14 @@ $this->registerJsFile('@web/sadm/js/uploadFile.js?v=' . time(),['depends'=>['yii
     </a>
     <div class="clearfix"></div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadImgModal" tabindex="-1" role="dialog" aria-labelledby="uploadImgModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Images are uploading. Please wait...
+            </div>
+        </div>
+    </div>
+</div>

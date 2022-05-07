@@ -23,7 +23,7 @@ MailSender.prototype.init = function () {
     	that.send();
     });
 
-    debug("MailSender init");
+    debug("Mail Sender init");
 };
 
 MailSender.prototype.send = function () {

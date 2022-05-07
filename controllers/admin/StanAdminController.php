@@ -2,20 +2,19 @@
 
 namespace app\controllers\admin;
 
-use app\models\admin\AboutUsModel;
-use app\models\admin\OrdersModel;
-use app\models\admin\StockModel;
-use app\models\admin\WeBuyModel;
-use app\models\Files;
-use app\models\StanLoginForm;
 use app\models\tables\Orders;
-use app\models\tables\Webuy;
+use app\models\tables\Shipments;
+use app\models\tables\Stock;
+use app\models\tables\UsersOnline;
+use function Composer\Autoload\includeFile;
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
+use app\models\admin\{
+    AboutUsModel, OrdersModel, ShipmentModel, ShipmentsModel, StockModel, WeBuyModel
+};
+use app\models\StanLoginForm;
+use yii\filters\{AccessControl,VerbFilter};
+use yii\web\{Controller,Response};
+
 
 class StanAdminController extends Controller
 {
@@ -117,10 +116,31 @@ class StanAdminController extends Controller
     {
         $this->actionCheckSession();
 
-        $uniqueUsers = 100;
-        $totalViews = 100;
-        $topMachine = 100;
-        $compact = ['uniqueUsers','totalViews','topMachine'];
+        $users = UsersOnline::find()->asArray()->all();
+        $uniqueUsers = count($users);
+        $totalViews = 0;
+        foreach ($users as $user)
+            $totalViews += $user['views_count'];
+
+        $stock = Stock::find()
+            ->select('id, short_name_ru, short_name_en, views')
+            ->asArray()
+            ->all();
+
+        $topMachine = 0;
+        $topMachineViews = 0;
+        foreach ($stock as $machine)
+        {
+            if( $machine['views'] > $topMachineViews )
+            {
+                $topMachineViews = $machine['views'];
+                $topMachine = $machine;
+            }
+        }
+
+        $ordersCount = Orders::find()->count();
+
+        $compact = ['uniqueUsers','totalViews','topMachine','ordersCount'];
         return $this->render('main', compact($compact));
     }
 
@@ -301,10 +321,11 @@ class StanAdminController extends Controller
         }
 
         /** РЕНДЕР ВИДА */
+        $shipmentID = (new ShipmentsModel())->getFromStockID($id);
         $machine = $stockM->getMachine();
         $images = $machine['images'];
 
-        $compact = ['machine','images'];
+        $compact = ['machine','images','shipmentID'];
         return $this->render('editmachine', compact($compact));
     }
 
@@ -323,11 +344,22 @@ class StanAdminController extends Controller
             return $response->redirect(['/stan-admin/stock']);
 
         $loaded = $request->post();
-        //debugAjax($loaded,"loaded");
+        //debugAjax($loaded,"loaded",1);
 
-        $stockM = new StockModel();
-        if ( $stockM->deleteImage( (int)$loaded['removeImage'] ) )
-            exit(json_encode(['ok'=>1]));
+        if ( isset($loaded['removeImage']) && !empty($loaded['removeImage']) )
+        {
+            $stockM = new StockModel();
+            if ( $stockM->deleteImage( (int)$loaded['removeImage'] ) )
+                exit(json_encode(['ok'=>1]));
+        }
+
+        if ( isset($loaded['removeImageSp']) && !empty($loaded['removeImageSp']) )
+        {
+            $s = new ShipmentsModel($loaded['rowID']);
+            if ( $s->removeImg( $loaded['removeImageSp'] ) )
+                exit(json_encode(['ok'=>1]));
+        }
+
 
         exit(json_encode(['error'=>'1']));
     }
@@ -369,6 +401,8 @@ class StanAdminController extends Controller
         return $response->redirect(['/stan-admin/stock']);
     }
 
+
+
     public function actionOrderbox()
     {
         $this->actionCheckSession();
@@ -383,6 +417,119 @@ class StanAdminController extends Controller
 
         $compact = ['orders'];
         return $this->render('orders', compact($compact));
+    }
+
+    public function actionShipments()
+    {
+        $this->actionCheckSession();
+        $session = Yii::$app->session;
+        $response = yii::$app->response;
+
+
+        $shipments = new ShipmentsModel();
+        $all = $shipments->getAll();
+        //debug($all,'$all',1);
+
+        $compact = ['all'];
+        return $this->render('shipments', compact($compact));
+    }
+
+    /**
+     * @param $id
+     * @return string|\yii\console\Response|Response
+     * @throws \Exception
+     */
+    public function actionShipment( $id=null )
+    {
+        $this->actionCheckSession();
+        $session = Yii::$app->session;
+        $response = yii::$app->response;
+        $request = yii::$app->request;
+
+        if ( $request->isAjax )
+        {
+            $resp = [];
+            if ( $shipID = $request->post('shipmentID') )
+            {
+                $shipment = new ShipmentsModel($shipID);
+                if ( $errors = $shipment->uploadImages() )
+                {
+                    if ( is_array($errors) )
+                    {
+                        $session->setFlash('uplFiles_error','Some image files are not uploaded: ' . implode('; ', $errors) );
+                    } elseif ($errors) {
+                        $session->setFlash('uplFiles_success','Image files are success uploaded!');
+                    } else {
+                        $session->setFlash('uplFiles_error','An error has occurred! Image files are no uploaded.');
+                        $resp['errors'] = "An error has occurred! Image files are no uploaded.";
+                        exit( json_encode($resp) );
+                    }
+                    $resp['files'] = $shipment->getUploadedFiles();
+                }
+            }
+
+            exit( json_encode($resp) );
+        }
+        $action = '';
+        $shipment = null;
+        if ( $request->isPost )
+        {
+            $action = 'edit';
+            $shipment = new ShipmentsModel($id);
+
+            if ( $shipment->update($request->post()) )
+            {
+                $session->setFlash('success_upd','Text data are success edited!');
+            } else {
+                $session->setFlash('no_upd','Text data are not updated!');
+            }
+        }
+
+        if ($request->isGet)
+            $action = $request->get('a');
+
+        switch ( $action )
+        {
+            case "add":
+                $shipment = new ShipmentsModel();
+                $newID = $shipment->newOne($request->get('pos_id'));
+                return $response->redirect(['/stan-admin/shipment/'.$newID,'a'=>'edit']);
+                break;
+            case "edit":
+                if ( !$shipment )
+                    $shipment = new ShipmentsModel($id);
+
+                $one = $shipment->getOne();
+                //debug($one,'$one',1);
+                break;
+            default :
+                return $response->redirect('/stan-admin/shipments/');
+                break;
+        }
+
+        $compact = ['one','action'];
+        return $this->render('shipment', compact($compact));
+    }
+
+    /**
+     * @param int $id
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeleteshipment(int $id)
+    {
+        $this->actionCheckSession();
+        $session = Yii::$app->session;
+        $response = yii::$app->response;
+
+        $s = new ShipmentsModel($id);
+        if ( $s->remove() )
+        {
+            $session->setFlash('success','Shipment was successfully deleted.');
+        } else {
+            $session->setFlash('error','An error has occurred!');
+        }
+
+        $response->redirect('/stan-admin/shipments');
     }
 
     /**

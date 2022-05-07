@@ -23,6 +23,11 @@ function debug(arr, str)
         console.log(arr);
     }
 }
+function randomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    rand = Math.round(rand);
+    return rand;
+}
 function formatDate(date) {
     let dd = date.getDate();
     if (dd < 10) dd = '0' + dd;

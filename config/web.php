@@ -54,10 +54,10 @@ $config = [
             'rules' => [
                 '/'=> '/main/home',
                 'machine/<id:\d+>'=> '/main/machine',
-                '<action:(orders|price-list|home)>' => '/main/<action>',
+                '<action:(price-list|home|shipment|orders)>' => '/main/<action>',
 
-                'stan-admin/<action:(editmachine|deletemachine)>/<id:\d+>' => '/admin/stan-admin/<action>',
-                'stan-admin/<action:(main|webuy|orderbox|about|stock|addmachine|delete|login|logoutt)>'=>'/admin/stan-admin/<action>',
+                'stan-admin/<action:(editmachine|shipment|deletemachine|deleteshipment)>/<id:\d+>' => '/admin/stan-admin/<action>',
+                'stan-admin/<action:(main|webuy|orderbox|shipment|shipments|about|stock|addmachine|delete|login|logoutt)>'=>'/admin/stan-admin/<action>',
                 'stan-admin'=> '/main/login',
 
                 //'<action:(about|contact|login|logout)>'=>'site/<action>',
